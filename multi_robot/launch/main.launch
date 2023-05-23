@@ -7,7 +7,23 @@
 
   <!-- start gui -->
   <node name="gazebo_gui" pkg="gazebo" type="gui" respawn="false" output="screen"/>
+  <node name="gotopose" pkg="multi_robot" type="goToPose.py" output="screen">
+    </node>
 
   <!-- include our robots -->
   <include file="$(find multi_robot)/launch/robots.launch"/>
+
+  <!-- Move Base -->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <rosparam file="$(find aiil_rosbot_demo)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find aiil_rosbot_demo)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find aiil_rosbot_demo)/config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find aiil_rosbot_demo)/config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find aiil_rosbot_demo)/config/trajectory_planner.yaml" command="load" />
+
+      <remap from="cmd_vel" to="cmd_vel"/>
+      <remap from="odom" to="odom"/>
+      <remap from="scan" to="/scan"/>
+
+    </node>
 </launch>
